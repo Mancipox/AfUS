@@ -4,17 +4,6 @@ import QRCode from 'qrcode.react'
 import * as firebase from 'firebase';
 import ReactInterval from 'react-interval'
 
-const config = {
-    apiKey: "AIzaSyDeRfJudlnDFhqBXrHtTfJDGQcnUg7QRhQ",
-    authDomain: "afus-8f2bc.firebaseapp.com",
-    databaseURL: "https://afus-8f2bc.firebaseio.com",
-    projectId: "afus-8f2bc",
-    storageBucket: "afus-8f2bc.appspot.com",
-    messagingSenderId: "936443493546",
-    appId: "1:936443493546:web:0fc40c3f74e6257e1d24d3",
-    measurementId: "G-VXXGJ13Z9X"
-};
-
 
 const style_card_qr = {
     "marginTop": "45px",
