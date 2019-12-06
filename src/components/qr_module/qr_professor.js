@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { Card, Button } from 'react-bootstrap'
+import { Card, Button, Modal } from 'react-bootstrap'
 import QRCode from 'qrcode.react'
 import * as firebase from 'firebase';
 import ReactInterval from 'react-interval'
+
+
 
 
 const style_card_qr = {
@@ -27,10 +29,19 @@ class qr_page_professor extends Component {
             dict_codes: [{ text: '' }],
             rand_index: 0,
             selected_code: "no data avaliable",
-            students: []
+            students: [],
+            showModal: false
         }
         this.changeQR = this.changeQR.bind(this)
     }
+
+    showModal = () => {
+        this.setState({ showModal: true });
+    };
+
+    hideModal = () => {
+        this.setState({ showModal: false });
+    };
 
     componentDidMount() {
         let dict_codes = []
@@ -49,6 +60,7 @@ class qr_page_professor extends Component {
             });
         this.listenerFi()
     }
+
 
     setSelectedCode(code) {
         let docNewCode = db.collection('current_code').doc("123");
@@ -89,15 +101,17 @@ class qr_page_professor extends Component {
                     <QRCode style={{ margin: 'auto', height: '450px', width: '450px' }} value={this.state.selected_code} />
                     <Card.Body>
                         <Card.Title>Escanea este código para marcar tu asistencia</Card.Title>
-                        <Button variant="primary">Finalizar toma de asistencia</Button>
+                        <Button variant="primary" onClick={this.showModal}>Finalizar toma de asistencia</Button>
                     </Card.Body>
                 </Card>
                 <Card style={style_card_students}>
+                
                     <Card.Body>
-                        {this.state.students.map(student => {
-                            return (<Card>
+                        {this.state.students.map((student,i) => {
+                            return (<Card bg="primary" text="white">
+                            <Card.Header>Estudiante número {i+1}</Card.Header>
                                 <Card.Body>
-                                    <Card.Img variant="top" src={student.image}/>
+                                    <Card.Img variant="top" src={student.image} />
                                     <Card.Title key={student.id}>{student.name}</Card.Title>
                                     <Card.Text>
                                         {student.id}
@@ -107,6 +121,43 @@ class qr_page_professor extends Component {
                         })}
                     </Card.Body>
                 </Card>
+
+
+                <Modal
+                    show= {this.state.showModal}
+                    size="lg"
+                    aria-labelledby="contained-modal-title-vcenter"
+                    centered
+                >
+                    <Modal.Header>
+                        <Modal.Title id="contained-modal-title-vcenter">
+                            Confirmar toma de asistencia
+                    </Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <h4>Clase de Pensamiento Social Contemporáneo</h4><br></br>
+                        <h5>Martes 18:00 - 21:00 pm</h5>
+                        <p>
+                        Según el escaneo de código QR, los asistentes fueron:
+                        </p>
+                        {this.state.students.map((student,i )=> {
+                            return (<Card bg="primary" text="white">
+                            <Card.Header>Estudiante número {i+1}</Card.Header>
+                                <Card.Body>
+                                    <Card.Img variant="top" src={student.image} />
+                                    <Card.Title key={student.id}>{student.name}</Card.Title>
+                                    <Card.Text>
+                                        {student.id}
+                                    </Card.Text>
+                                    <Button variant="danger">Ausente</Button>
+                                </Card.Body>
+                            </Card>)
+                        })}
+                    </Modal.Body>
+                    <Modal.Footer>
+                        <Button onClick={this.hideModal}>Confirmar</Button>
+                    </Modal.Footer>
+                </Modal>
             </div>
         )
     }
